@@ -1,11 +1,32 @@
 import re
 import hashlib
 import base64
+from urllib.parse import urljoin
 
+import requests
 import xmltodict
 from Crypto.Util.Padding import pad, unpad
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
+
+
+base_url = 'https://api.weixin.qq.com'
+
+
+def get_access_token(app_id, app_secret):
+    return get('/cgi-bin/token', {
+        'grant_type': 'client_credential',
+        'appid': app_id,
+        'secret': app_secret,
+    })
+
+
+def get(url, *args, **kwargs):
+    url = urljoin(base_url, url)
+
+    r = requests.get(url, *args, **kwargs)
+
+    return r.json()
 
 
 def parse(xml):
