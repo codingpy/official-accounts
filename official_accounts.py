@@ -25,6 +25,10 @@ def get_api_domain_ip(access_token):
     return get('/cgi-bin/get_api_domain_ip?access_token=' + access_token)
 
 
+def get_callback_ip(access_token):
+    return get('/cgi-bin/getcallbackip?access_token=' + access_token)
+
+
 def get(url, *args, **kwargs):
     url = urljoin(base_url, url)
 
