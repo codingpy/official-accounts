@@ -10,23 +10,26 @@ from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
 
 
-base_url = 'https://api.weixin.qq.com'
+base_url = "https://api.weixin.qq.com"
 
 
 def get_access_token(app_id, app_secret):
-    return get('/cgi-bin/token', {
-        'grant_type': 'client_credential',
-        'appid': app_id,
-        'secret': app_secret,
-    })
+    return get(
+        "/cgi-bin/token",
+        {
+            "grant_type": "client_credential",
+            "appid": app_id,
+            "secret": app_secret,
+        },
+    )
 
 
 def get_api_domain_ip(access_token):
-    return get('/cgi-bin/get_api_domain_ip?access_token=' + access_token)
+    return get("/cgi-bin/get_api_domain_ip?access_token=" + access_token)
 
 
 def get_callback_ip(access_token):
-    return get('/cgi-bin/getcallbackip?access_token=' + access_token)
+    return get("/cgi-bin/getcallbackip?access_token=" + access_token)
 
 
 def get(url, *args, **kwargs):
@@ -38,40 +41,40 @@ def get(url, *args, **kwargs):
 
 
 def parse(xml):
-    return xmltodict.parse(xml, postprocessor=postprocessor)['xml']
+    return xmltodict.parse(xml, postprocessor=postprocessor)["xml"]
 
 
 def unparse(dic):
     return xmltodict.unparse(
-        {'xml': dic}, full_document=False, preprocessor=preprocessor
+        {"xml": dic}, full_document=False, preprocessor=preprocessor
     )
 
 
 def postprocessor(path, key, value):
     key = to_snake(key)
 
-    if key in ['create_time', 'msg_id', 'scale']:
+    if key in ["create_time", "msg_id", "scale"]:
         value = int(value)
 
-    if key in ['location__x', 'location__y']:
+    if key in ["location__x", "location__y"]:
         value = float(value)
 
     return key, value
 
 
 def preprocessor(key, value):
-    if key != 'xml':
+    if key != "xml":
         key = to_camel(key)
 
     return key, value
 
 
 def to_snake(s):
-    return re.sub('(?<!^)(?=[A-Z])', '_', s).lower()
+    return re.sub("(?<!^)(?=[A-Z])", "_", s).lower()
 
 
 def to_camel(s):
-    return re.sub('_(?=[A-Z])', '', s.title())
+    return re.sub("_(?=[A-Z])", "", s.title())
 
 
 def verify(signature, *args):
@@ -79,7 +82,7 @@ def verify(signature, *args):
 
 
 def sign(*args):
-    return sha1(''.join(sorted(args)))
+    return sha1("".join(sorted(args)))
 
 
 def sha1(s):
@@ -99,23 +102,18 @@ def decrypt(ct, encoding_aes_key):
 
 
 def get_cipher(encoding_aes_key):
-    key = base64.b64decode(encoding_aes_key + '=')
+    key = base64.b64decode(encoding_aes_key + "=")
 
-    return AES.new(key, AES.MODE_CBC, iv=key[:AES.block_size])
+    return AES.new(key, AES.MODE_CBC, iv=key[: AES.block_size])
 
 
 def pack(msg, app_id):
     msg_len = len(msg)
 
-    return (
-        get_random_bytes(16)
-        + msg_len.to_bytes(4, byteorder='big')
-        + msg
-        + app_id
-    )
+    return get_random_bytes(16) + msg_len.to_bytes(4, byteorder="big") + msg + app_id
 
 
 def unpack(buffer):
-    msg_len = int.from_bytes(buffer[16:20], byteorder='big')
+    msg_len = int.from_bytes(buffer[16:20], byteorder="big")
 
     return buffer[20 : 20 + msg_len], buffer[20 + msg_len :]
