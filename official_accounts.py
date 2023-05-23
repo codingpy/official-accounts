@@ -25,17 +25,35 @@ def get_access_token(app_id, app_secret):
 
 
 def get_api_domain_ip(access_token):
-    return get("/cgi-bin/get_api_domain_ip?access_token=" + access_token)
+    return get(f"/cgi-bin/get_api_domain_ip?access_token={access_token}")
 
 
 def get_callback_ip(access_token):
-    return get("/cgi-bin/getcallbackip?access_token=" + access_token)
+    return get(f"/cgi-bin/getcallbackip?access_token={access_token}")
 
 
-def get(url, *args, **kwargs):
+def check_callback(access_token, action="all", check_operator="DEFAULT"):
+    return post(
+        f"/cgi-bin/callback/check?access_token={access_token}",
+        json={
+            "action": action,
+            "check_operator": check_operator,
+        },
+    )
+
+
+def get(url, **kwargs):
+    return request("GET", url, **kwargs)
+
+
+def post(url, **kwargs):
+    return request("POST", url, **kwargs)
+
+
+def request(method, url, **kwargs):
     url = urljoin(base_url, url)
 
-    r = requests.get(url, *args, **kwargs)
+    r = requests.request(method, url, **kwargs)
 
     return r.json()
 
