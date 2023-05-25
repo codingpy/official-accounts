@@ -16,7 +16,7 @@ base_url = "https://api.weixin.qq.com"
 def get_access_token(app_id, app_secret):
     return get(
         "/cgi-bin/token",
-        {
+        params={
             "grant_type": "client_credential",
             "appid": app_id,
             "secret": app_secret,
