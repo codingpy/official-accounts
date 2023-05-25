@@ -42,6 +42,31 @@ def check_callback(access_token, action="all", check_operator="DEFAULT"):
     )
 
 
+def clear_quota(access_token, app_id):
+    return post(
+        f"/cgi-bin/clear_quota?access_token={access_token}", json={"appid": app_id}
+    )
+
+
+def get_quota(access_token, cgi_path):
+    return post(
+        f"/cgi-bin/openapi/quota/get?access_token={access_token}",
+        json={"cgi_path": cgi_path},
+    )
+
+
+def get_rid(access_token, rid):
+    return post(
+        f"/cgi-bin/openapi/rid/get?access_token={access_token}", json={"rid": rid}
+    )
+
+
+def clear_quota_v2(app_id, app_secret):
+    return post(
+        "/cgi-bin/clear_quota/v2", params={"appid": app_id, "appsecret": app_secret}
+    )
+
+
 def get(url, **kwargs):
     return request("GET", url, **kwargs)
 
