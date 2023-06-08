@@ -66,6 +66,44 @@ def clear_quota_v2(app_id, app_secret):
     )
 
 
+def create_menu(access_token, button):
+    return post(
+        f"/cgi-bin/menu/create?access_token={access_token}", json={"button": button}
+    )
+
+
+def get_current_self_menu_info(access_token):
+    return get(f"/cgi-bin/get_current_selfmenu_info?access_token={access_token}")
+
+
+def del_menu(access_token):
+    return get(f"/cgi-bin/menu/delete?access_token={access_token}")
+
+
+def add_conditional_menu(access_token, button, match_rule):
+    return post(
+        f"/cgi-bin/menu/addconditional?access_token={access_token}",
+        json={"button": button, "matchrule": match_rule},
+    )
+
+
+def del_conditional_menu(access_token, menu_id):
+    return post(
+        f"/cgi-bin/menu/delconditional?access_token={access_token}",
+        json={"menuid": menu_id},
+    )
+
+
+def try_match_menu(access_token, user_id):
+    return post(
+        f"/cgi-bin/menu/trymatch?access_token={access_token}", json={"user_id": user_id}
+    )
+
+
+def get_menu(access_token):
+    return get(f"/cgi-bin/menu/get?access_token={access_token}")
+
+
 def get(url, **kwargs):
     return request("GET", url, **kwargs)
 
