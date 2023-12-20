@@ -34,10 +34,7 @@ def get_callback_ip(access_token):
 def check_callback(access_token, action="all", check_operator="DEFAULT"):
     return post(
         f"/cgi-bin/callback/check?access_token={access_token}",
-        json={
-            "action": action,
-            "check_operator": check_operator,
-        },
+        json={"action": action, "check_operator": check_operator},
     )
 
 
