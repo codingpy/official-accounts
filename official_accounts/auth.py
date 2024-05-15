@@ -20,19 +20,16 @@ def sha1(s):
 
 def encrypt(pt, encoding_aes_key):
     cipher = get_cipher(encoding_aes_key)
-
     return base64.b64encode(cipher.encrypt(pad(pt, 32)))
 
 
 def decrypt(ct, encoding_aes_key):
     cipher = get_cipher(encoding_aes_key)
-
     return unpad(cipher.decrypt(base64.b64decode(ct)), 32)
 
 
 def get_cipher(encoding_aes_key):
     key = base64.b64decode(encoding_aes_key + "=")
-
     return AES.new(key, AES.MODE_CBC, iv=key[: AES.block_size])
 
 
@@ -42,5 +39,4 @@ def pack(msg, app_id):
 
 def unpack(buffer):
     msg_len = int.from_bytes(buffer[16:20], byteorder="big")
-
     return buffer[20 : 20 + msg_len], buffer[20 + msg_len :]
