@@ -1,19 +1,39 @@
 import argparse
+import logging
 
 from aiohttp import web
 
-from official_accounts import keys
 from official_accounts.routes import setup_routes
 
 
-def init_func(argv):
+async def init_app(argv=None):
     app = web.Application()
-    setup_routes(app)
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--token")
     args = parser.parse_args(argv)
 
-    app[keys.token] = args.token
+    app["token"] = args.token
 
+    setup_routes(app)
     return app
+
+
+async def get_app():
+    """Used by aiohttp-devtools for local development."""
+    import aiohttp_debugtoolbar
+
+    app = await init_app()
+    aiohttp_debugtoolbar.setup(app)
+    return app
+
+
+def main():
+    logging.basicConfig(level=logging.DEBUG)
+
+    app = init_app()
+    web.run_app(app)
+
+
+if __name__ == "__main__":
+    main()

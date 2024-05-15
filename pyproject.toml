@@ -13,6 +13,8 @@ xmltodict = "^0.13.0"
 
 
 [tool.poetry.group.dev.dependencies]
+aiohttp-debugtoolbar = "^0.6.1"
+aiohttp-devtools = "^1.1.2"
 black = "^24.4.2"
 
 [build-system]
