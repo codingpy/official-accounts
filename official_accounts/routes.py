@@ -1,5 +1,5 @@
-from official_accounts.views import index
+from official_accounts.views import Handle
 
 
 def setup_routes(app):
-    app.router.add_get("/wx", index)
+    app.router.add_view("/wx", Handle)

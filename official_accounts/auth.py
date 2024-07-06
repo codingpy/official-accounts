@@ -18,6 +18,19 @@ def sha1(s):
     return hashlib.sha1(s.encode()).hexdigest()
 
 
+def encrypt_msg(msg, app_id, encoding_aes_key):
+    return pack(encrypt(msg, encoding_aes_key), app_id.encode())
+
+
+def decrypt_msg(msg_encrypt, app_id, encoding_aes_key):
+    msg, remote_app_id = unpack(decrypt(msg_encrypt, encoding_aes_key))
+
+    if remote_app_id != app_id.encode():
+        raise ValueError
+
+    return msg
+
+
 def encrypt(pt, encoding_aes_key):
     cipher = get_cipher(encoding_aes_key)
     return base64.b64encode(cipher.encrypt(pad(pt, 32)))

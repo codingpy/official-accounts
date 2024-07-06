@@ -1,19 +1,15 @@
-import argparse
 import logging
 
 from aiohttp import web
 
 from official_accounts.routes import setup_routes
+from official_accounts.settings import get_config
 
 
 async def init_app(argv=None):
     app = web.Application()
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--token")
-    args = parser.parse_args(argv)
-
-    app["token"] = args.token
+    app.update(get_config(argv))
 
     setup_routes(app)
     return app
